@@ -44,7 +44,9 @@ jobs:
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
-          flags: "--color"
+          flags: "-o /tmp/brakeman-report.html"
+      - name: copy report
+        run: cp /tmp/brakeman-report.html /github/workspace/reports
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
