@@ -44,10 +44,10 @@ jobs:
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
-          flags: "-o ${{github.workspace}}/reports/brakeman-output.html"
+          flags: "-o /github/workspace/reports/brakeman-output.html"
           
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
            name: Depcheck report
-           path: ${{github.workspace}}/reports
+           path: /github/workspace/reports
