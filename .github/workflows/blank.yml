@@ -24,7 +24,6 @@ jobs:
         uses: ruby/setup-ruby@359bebbc29cbe6c87da6bc9ea3bc930432750108
         with:
           ruby-version: 2.7
-          bundler-cache: true
       - name: Build and run test
         run: |
           sudo apt-get -yqq install libpq-dev
@@ -36,7 +35,7 @@ jobs:
           bundle exec rails db:migrate RAILS_ENV=test
           bundle exec rails test RAILS_ENV=test
           bundle exec rake RAILS_ENV=test
-          brakeman -f sonar -o brakeman-sast-report.json
+          brakeman -f sonar -o brakeman-sast-report.json --no-exit-on-warn --no-exit-on-error
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
