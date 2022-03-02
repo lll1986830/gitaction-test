@@ -42,9 +42,10 @@ jobs:
         with:
           project: 'ruby-poc'
           path: '.'
-          format: 'JSON' 
+          format: 'ALL' 
           args: >
-            --out /github/workspace/reports/dependency-check-report.json
+            --out /github/workspace/reports
+            --scan Gemfile.lock
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
@@ -56,6 +57,8 @@ jobs:
           name: Depcheck-report  
       - name: check files
         run: ls -al 
+      - name: check path
+        run: pwd     
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
