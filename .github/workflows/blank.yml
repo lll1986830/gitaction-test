@@ -28,12 +28,19 @@ jobs:
         run: |
           sudo apt-get -yqq install libpq-dev
           gem install bundler:1.17.3
+          gem install brakeman
           RAILS_ENV=test 
           bundle install --without production --jobs 4 --retry 3
           bundle exec rails db:create RAILS_ENV=test
           bundle exec rails db:migrate RAILS_ENV=test
           bundle exec rails test RAILS_ENV=test
           bundle exec rake RAILS_ENV=test
+          brakeman -f sonar -o brakeman-sast-report.json
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
@@ -48,12 +55,4 @@ jobs:
         with:
            name: Depcheck report
            path: ${{github.workspace}}/reports          
-      - name: check report
-        run: ls -al /github/workspace/reports/
-      - name: check permission
-        run: whoami
-      - name: Brakeman-scan
-        uses: artplan1/brakeman-action@v1.2.1
-        with:
-          flags: "--no-exit-on-warn"
 
