@@ -36,23 +36,26 @@ jobs:
           bundle exec rails test RAILS_ENV=test
           bundle exec rake RAILS_ENV=test
           brakeman -f sonar -o brakeman-sast-report.json --no-exit-on-warn --no-exit-on-error
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
           project: 'ruby-poc'
           path: '.'
-          format: 'HTML' 
+          format: 'JSON' 
           args: >
-            --out /github/workspace/reports/depcheck.html
+            --out /github/workspace/reports/depcheck.json
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
-           name: Depcheck report
-           path: ${{github.workspace}}/reports          
-
+           name: Depcheck-report
+           path: ${{github.workspace}}/reports    
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: Depcheck-report           
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
