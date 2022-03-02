@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
           bundler-cache: true
@@ -45,7 +45,7 @@ jobs:
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
-          flags: "--color -o /github/workspace/reports/brakeman-output.html"
+          flags: "-o ${{github.workspace}}/reports/brakeman-output.html"
           
       - name: Upload Test results
         uses: actions/upload-artifact@master
