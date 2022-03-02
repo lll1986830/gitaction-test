@@ -41,11 +41,10 @@ jobs:
         id: Depcheck
         with:
           project: 'ruby-poc'
-          path: '.'
+          path: 'Gemfile.lock'
           format: 'ALL' 
           args: >
             --out /github/workspace/reports
-            --scan Gemfile.lock
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
