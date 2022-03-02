@@ -41,6 +41,8 @@ jobs:
           project: 'ruby-poc'
           path: '.'
           format: 'HTML'   
+      - name: check report
+        run: ls -al /github/workspace/reports/dependency-check-report.html
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
