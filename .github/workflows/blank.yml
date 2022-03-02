@@ -41,14 +41,17 @@ jobs:
           project: 'ruby-poc'
           path: '.'
           format: 'HTML'   
-      - name: check report
-        run: ls -al /github/workspace/reports/dependency-check-report.html
-      - name: Brakeman-scan
-        uses: artplan1/brakeman-action@v1.2.1
-        with:
-          flags: "--no-exit-on-warn"
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
            name: Depcheck report
-           path: ${{github.workspace}}/reports
+           path: ${{github.workspace}}/reports          
+      - name: check report
+        run: ls -al /github/workspace/reports/
+      - name: check permission
+        run: whoami
+      - name: Brakeman-scan
+        uses: artplan1/brakeman-action@v1.2.1
+        with:
+          flags: "--no-exit-on-warn"
+
