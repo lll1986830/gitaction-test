@@ -44,7 +44,7 @@ jobs:
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
-          flags: "-o /tmp/brakeman-report.html"
+          flags: "-o /tmp/brakeman-report.html --no-exit-on-warn --no-exit-on-error"
       - name: copy report
         run: cp /tmp/brakeman-report.html /github/workspace/reports
       - name: Upload Test results
