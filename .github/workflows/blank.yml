@@ -44,9 +44,7 @@ jobs:
       - name: Brakeman-scan
         uses: artplan1/brakeman-action@v1.2.1
         with:
-          flags: |
-            --no-exit-on-error
-            --no-exit-on-warn
+          flags: "--no-exit-on-warn"
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
