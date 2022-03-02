@@ -40,7 +40,9 @@ jobs:
         with:
           project: 'ruby-poc'
           path: '.'
-          format: 'HTML'   
+          format: 'HTML' 
+          args: >
+            --out /github/workspace/reports/depcheck.html
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
