@@ -51,8 +51,8 @@ jobs:
             dependency-check-report.html 
       - name: check files
         run: ls -al 
-      - name: check path
-        run: pwd     
+      - name: update filename in report
+        run: sed -i 's/gitaction-test\\\/Gemfile.lock/Gemfile.lock/g' dependency-check-report.json     
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
