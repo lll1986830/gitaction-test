@@ -32,5 +32,5 @@ jobs:
           context: .
           push: true
           tags: |
-            gcr.io/ruby-poc:latest
-            gcr.io/ruby-poc:1.0.0
+            gcr.io/logical-pathway-340901/test/ruby-poc:latest
+            gcr.io/logical-pathway-340901/test/ruby-poc:1.0.0
