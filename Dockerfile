@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 
 # throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
+#RUN bundle config --global frozen 1
 
 
 ENV APP_PATH /usr/src/app
