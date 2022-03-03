@@ -42,17 +42,17 @@ jobs:
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.0.0/dependency-check-7.0.0-release.zip
           unzip dependency-check-7.0.0-release.zip
           dependency-check/bin/dependency-check.sh --scan Gemfile.lock --format ALL --project ruby-poc1 --out .
+      - name: check files
+        run: ls -al 
+      - name: update filename in report
+        run: sed -i 's/gitaction-test\\\/Gemfile.lock/Gemfile.lock/g' dependency-check-report.json          
       - name: Upload Test results
         uses: actions/upload-artifact@master
         with:
            name: Depcheck-report
            path: |
             dependency-check-report.json 
-            dependency-check-report.html 
-      - name: check files
-        run: ls -al 
-      - name: update filename in report
-        run: sed -i 's/gitaction-test\\\/Gemfile.lock/Gemfile.lock/g' dependency-check-report.json     
+            dependency-check-report.html  
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
