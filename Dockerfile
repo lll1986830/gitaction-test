@@ -26,9 +26,9 @@ COPY . $APP_PATH
 
 ENV RAILS_ENV development
 
-RUN bin/rake db:migrate 
+RUN bundle exec rails db:create RAILS_ENV=test
+RUN bundle exec rails db:migrate RAILS_ENV=test
 
-RUN bin/rake assets:precompile
 
 EXPOSE 3000
 
