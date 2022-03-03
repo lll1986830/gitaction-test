@@ -57,8 +57,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Depcheck-report
-          path: reports
-    
+      - name: check
+        run: ls -al
       - uses: github/codeql-action/upload-sarif@v1
         with:
           # Path to SARIF file relative to the root of the repository
