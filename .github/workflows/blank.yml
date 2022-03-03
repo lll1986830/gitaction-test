@@ -46,7 +46,9 @@ jobs:
         uses: actions/upload-artifact@master
         with:
            name: Depcheck-report
-           path: dependency-check-report.json 
+           path: |
+            dependency-check-report.json 
+            dependency-check-report.html 
       - name: check files
         run: ls -al 
       - name: check path
