@@ -1,4 +1,4 @@
-FROM ruby:2.3.1-slim
+FROM ruby:2.7-slim
 
 RUN apt-get update && \
     apt-get install -y build-essential libcurl4-openssl-dev libxml2-dev libsqlite3-dev libpq-dev nodejs postgresql-client sqlite3 --no-install-recommends && \ 
@@ -19,6 +19,7 @@ COPY Gemfile.lock $APP_PATH
 
 WORKDIR $APP_PATH
 
+RUN gem install bundler:1.17.3
 RUN bundle install --without production --jobs 4 --retry 3
 
 COPY . $APP_PATH
