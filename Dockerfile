@@ -19,7 +19,7 @@ COPY Gemfile.lock $APP_PATH
 
 WORKDIR $APP_PATH
 
-RUN bundle install
+RUN bundle install --without production --jobs 4 --retry 3
 
 COPY . $APP_PATH
 
