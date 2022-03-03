@@ -39,8 +39,6 @@ jobs:
           brakeman -f sonar -o brakeman-sast-report.json --no-exit-on-warn --no-exit-on-error
       - name: Depcheck
         run: |
-          cp  Gemfile.lock /tmp
-          cd /tmp
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.0.0/dependency-check-7.0.0-release.zip
           unzip dependency-check-7.0.0-release.zip
           dependency-check/bin/dependency-check.sh --scan Gemfile.lock --format ALL --project ruby-poc1 --out .
