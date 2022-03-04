@@ -62,7 +62,6 @@ jobs:
           ignore-unfixed: true
           format: 'sarif'
           output: 'reports/trivy-results.sarif'
-          severity: 'CRITICAL'
  #       with:
  #         image-ref: 'gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }}'
    #       format: 'sarif'
