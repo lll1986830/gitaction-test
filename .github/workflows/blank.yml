@@ -52,8 +52,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Depcheck-report
-      - name: check
-        run: ls -al
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }}'
+          format: 'sarif'
+          output: 'reports/trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
       - uses: github/codeql-action/upload-sarif@v1
         with:
           # Path to SARIF file relative to the root of the repository
