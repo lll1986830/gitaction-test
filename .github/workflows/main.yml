@@ -30,6 +30,8 @@ jobs:
           gem install bundler:1.17.3
           gem install brakeman
           gem install bundler-audit
+          gem install rubocop 
+          gem install code-scanning-rubocop
           RAILS_ENV=test 
           brakeman -f sarif -o brakeman-sast-report.sarif --no-exit-on-warn --no-exit-on-error
           mkdir reports
@@ -80,11 +82,7 @@ jobs:
            name: trivy-report
            path: reports/trivy-results.html
       - name: RuboCop run
-        run: |
-          bash -c "
-            bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o reports/rubocop.sarif
-            [[ $? -ne 2 ]]
-          "
+        run: rubocop --require code_scanning --format CodeScanning::SarifFormatter -o reports/rubocop.sarif
       - name: Upload Sarif output
         uses: github/codeql-action/upload-sarif@v1
         with:
