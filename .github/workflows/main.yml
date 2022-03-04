@@ -61,9 +61,8 @@ jobs:
           image-ref: 'gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }}'
           format: 'sarif'
           output: 'reports/trivy-results.sarif'
-
       - name: Upload Trivy scan results to GitHub Security tab
-      - uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v1
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: reports
