@@ -1,0 +1,69 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@359bebbc29cbe6c87da6bc9ea3bc930432750108
+        with:
+          ruby-version: 2.7
+      - name: Build and run test
+        run: |
+          sudo apt-get -yqq install libpq-dev
+          gem install bundler:1.17.3
+          gem install brakeman
+          gem install bundler-audit
+          RAILS_ENV=test 
+          brakeman -f sarif -o brakeman-sast-report.sarif --no-exit-on-warn --no-exit-on-error
+          mkdir reports
+          cp brakeman-sast-report.sarif reports
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'test'
+          path: '.'
+          format: 'SARIF'    
+          args: >
+            --enableRetired
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: Depcheck-report
+           path: ${{github.workspace}}/reports
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Depcheck-report
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }} .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'gcr.io/logical-pathway-340901/test/ruby-poc:${{ github.sha }}'
+          format: 'sarif'
+          output: 'reports/trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: reports
