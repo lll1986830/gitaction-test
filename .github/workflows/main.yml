@@ -74,13 +74,18 @@ jobs:
           format: 'template'
           template: '@html.tpl'
           output: 'reports/trivy-results.html'    
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: reports
       - name: Upload Test trivy reports
         uses: actions/upload-artifact@master
         with:
            name: trivy-report
            path: reports/trivy-results.html
+      - name: RuboCop run
+        run: |
+          bash -c "
+            bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o reports/rubocop.sarif
+            [[ $? -ne 2 ]]
+          "
+      - name: Upload Sarif output
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: reports
