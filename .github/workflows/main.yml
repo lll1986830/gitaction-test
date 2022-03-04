@@ -82,7 +82,11 @@ jobs:
            name: trivy-report
            path: reports/trivy-results.html
       - name: RuboCop run
-        run: rubocop --require code_scanning --format CodeScanning::SarifFormatter -o reports/rubocop.sarif
+        run: |
+          bash -c "
+           rubocop --require code_scanning --format CodeScanning::SarifFormatter -o reports/rubocop.sarif
+            [[ $? -ne 2 ]]
+          "
       - name: Upload Sarif output
         uses: github/codeql-action/upload-sarif@v1
         with:
