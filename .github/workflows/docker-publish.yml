@@ -29,6 +29,6 @@ jobs:
           context: .
           file: Dockerfile-prod
           push: true
-          tags: ghcr.io/ruby-poc:${{ github.sha }}, ghcr.io/ruby-poc:latest
+          tags: ghcr.io/lycbrian/ruby-poc:${{ github.sha }}, ghcr.io/lycbrian/ruby-poc:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
