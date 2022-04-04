@@ -1,0 +1,41 @@
+FROM ruby:2.7-slim AS build-env
+
+ARG RAILS_ROOT=/app
+ARG BUILD_PACKAGES="build-base curl-dev git"
+ARG DEV_PACKAGES="postgresql-dev yaml-dev zlib-dev nodejs yarn"
+ARG RUBY_PACKAGES="tzdata"
+ENV RAILS_ENV=production
+ENV NODE_ENV=production
+ENV BUNDLE_APP_CONFIG="$RAILS_ROOT/.bundle"
+
+
+# install packages
+RUN apt-get update && \
+    apt-get install -y build-essential libcurl4-openssl-dev libxml2-dev libsqlite3-dev libpq-dev nodejs postgresql-client sqlite3 --no-install-recommends && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY Gemfile*  ./
+
+# install rubygem
+COPY Gemfile Gemfile.lock $RAILS_ROOT/
+RUN gem install bundler:1.17.3 \
+    && bundle install --without development:test --jobs 4 --retry 3
+COPY . .
+# Remove folders not needed in resulting image
+RUN rm -rf node_modules tmp/cache app/assets vendor/assets spec
+
+
+############### Build step done ###############
+
+FROM ruby:2.7-alpine
+ARG RAILS_ROOT=/app
+ARG PACKAGES="tzdata postgresql-client nodejs bash"
+ENV RAILS_ENV=production
+ENV BUNDLE_APP_CONFIG="$RAILS_ROOT/.bundle"
+WORKDIR $RAILS_ROOT
+# install packages
+RUN apk update \
+    && apk upgrade \
+    && apk add --update --no-cache $PACKAGES
+COPY --from=build-env $RAILS_ROOT $RAILS_ROOT
+EXPOSE 3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
