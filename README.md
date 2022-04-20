@@ -71,3 +71,5 @@ At this point, the branch should be working. (You have to copy the `Gemfile` con
 
 For more information, see the
 [*Ruby on Rails Tutorial* book](http://www.railstutorial.org/book).
+
+.
