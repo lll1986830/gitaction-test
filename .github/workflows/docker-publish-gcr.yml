@@ -1,0 +1,36 @@
+name: docker-build
+
+on:
+  push:
+    branches:
+      - 'main'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:      
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_JSON_KEY }}
+        
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile-prod
+          push: true
+          tags: gcr.io/logical-pathway-340901/ruby-poc:${{ github.sha }}, gcr.io/logical-pathway-340901/ruby-poc:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
